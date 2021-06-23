@@ -11,7 +11,11 @@ use LaravelRouteLog\Logger\LoggerInterface;
 
 class LaravelRouteLogProvider extends ServiceProvider {
     public function register(){
-        $this->app->instance(LoggerInterface::class, new DatabaseLogger());
+        $driver = [
+            'file' => FileLogger::class,
+            'database' => DatabaseLogger::class
+        ][config('laravel-route-log.driver')];
+        $this->app->instance(LoggerInterface::class, new $driver());
     }
 
     protected $startTime;
