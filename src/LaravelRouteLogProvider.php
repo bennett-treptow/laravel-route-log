@@ -42,7 +42,7 @@ class LaravelRouteLogProvider extends ServiceProvider {
             $request = request();
             $route = $request->route();
 
-            app(LoggerInterface::class)->log($request->getMethod(), $request->getRequestUri(), $route->getName(), now(), round($totalTime * 1000, 4));
+            app(LoggerInterface::class)->log($request->getMethod(), $request->path(), $route->getName(), now(), round($totalTime * 1000, 4));
         });
     }
 

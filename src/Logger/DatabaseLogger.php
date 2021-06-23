@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRouteLog\Logger;
 
+use Illuminate\Database\Schema\Builder;
+use Illuminate\Support\Str;
 use LaravelRouteLog\Models\RouteLog;
 
 class DatabaseLogger implements LoggerInterface {
@@ -8,8 +10,8 @@ class DatabaseLogger implements LoggerInterface {
     {
         RouteLog::create([
             'method' => $method,
-            'path' => $path,
-            'route_name' => $route_name,
+            'path' => Str::limit($path, Builder::$defaultStringLength, ''),
+            'route_name' => Str::limit($route_name, Builder::$defaultStringLength, ''),
             'requested_at' => $requested_at,
             'request_length' => $request_length
         ]);
