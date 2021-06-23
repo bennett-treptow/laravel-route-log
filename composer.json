@@ -1,0 +1,45 @@
+{
+    "name": "bennett/laravel-route-log",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bennett Treptow",
+            "email": "me@btreptow.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^6.0|^7.0|^8.0",
+        "illuminate/console": "^6.0|^7.0|^8.0",
+        "illuminate/database": "^6.0|^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.17",
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelRouteLog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ],
+        "test": ["vendor/bin/phpunit"]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelRouteLog\\LaravelRouteLogProvider"
+            ]
+        }
+    },
+    "prefer-stable": true
+}
