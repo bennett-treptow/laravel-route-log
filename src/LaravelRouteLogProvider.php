@@ -11,11 +11,14 @@ use LaravelRouteLog\Logger\LoggerInterface;
 
 class LaravelRouteLogProvider extends ServiceProvider {
     public function register(){
-        $driver = [
-            'file' => FileLogger::class,
-            'database' => DatabaseLogger::class
-        ][config('laravel-route-log.driver')];
-        $this->app->instance(LoggerInterface::class, new $driver());
+        $this->app->singleton(LoggerInterface::class, function(){
+            $driver = [
+                'file' => FileLogger::class,
+                'database' => DatabaseLogger::class
+            ][config('laravel-route-log.driver')];
+
+            return new $driver();
+        });
     }
 
     protected $startTime;
@@ -25,6 +28,7 @@ class LaravelRouteLogProvider extends ServiceProvider {
         $this->commands([
             ClearRouteLogCommand::class
         ]);
+        $this->mergeConfigFrom(__DIR__.'/../config/laravel-route-log.php', 'laravel-route-log');
 
         if($this->app->runningInConsole()){
             return;
@@ -38,7 +42,7 @@ class LaravelRouteLogProvider extends ServiceProvider {
             $request = request();
             $route = $request->route();
 
-            app(LoggerInterface::class)->log($request->getMethod(), $request->path(), $route->getName(), now(), round($totalTime * 1000, 4));
+            app(LoggerInterface::class)->log($request->getMethod(), $request->getRequestUri(), $route->getName(), now(), round($totalTime * 1000, 4));
         });
     }
 
