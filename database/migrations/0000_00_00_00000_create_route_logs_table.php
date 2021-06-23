@@ -13,6 +13,7 @@ class CreateRouteLogsTable extends Migration
             $table->string('path');
             $table->string('route_name')->nullable();
             $table->date('requested_at');
+            $table->unsignedDecimal('request_length');
         });
     }
 
