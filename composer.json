@@ -1,5 +1,5 @@
 {
-    "name": "bennett/laravel-route-log",
+    "name": "bennett-treptow/laravel-route-log",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -41,5 +41,6 @@
             ]
         }
     },
-    "prefer-stable": true
+    "prefer-stable": true,
+    "minimum-stability": "stable"
 }
