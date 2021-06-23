@@ -24,26 +24,29 @@ class LaravelRouteLogProvider extends ServiceProvider {
     protected $startTime;
 
     public function boot(){
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->commands([
             ClearRouteLogCommand::class
         ]);
         $this->mergeConfigFrom(__DIR__.'/../config/laravel-route-log.php', 'laravel-route-log');
 
-        if($this->app->runningInConsole()){
-            return;
+        if(config('laravel-route-log.enabled')) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            if ($this->app->runningInConsole()) {
+                return;
+            }
+
+            $this->app->booted(function () {
+                $this->startTime = microtime(true);
+            });
+            $this->app->terminating(function () {
+                $totalTime = microtime(true) - $this->startTime;
+                $request = request();
+                $route = $request->route();
+
+                app(LoggerInterface::class)->log($request->getMethod(), $request->path(), $route->getName(), now(),
+                    round($totalTime * 1000, 4));
+            });
         }
-
-        $this->app->booted(function(){
-            $this->startTime = microtime(true);
-        });
-        $this->app->terminating(function(){
-            $totalTime = microtime(true) - $this->startTime;
-            $request = request();
-            $route = $request->route();
-
-            app(LoggerInterface::class)->log($request->getMethod(), $request->path(), $route->getName(), now(), round($totalTime * 1000, 4));
-        });
     }
 
 }
